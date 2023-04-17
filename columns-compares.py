@@ -31,5 +31,18 @@ print ("starting Validation............................................", "\n")
 print(" ######################## Total record count from Oracle database #########################", "\n")
 count_Oracle_csv = len(dfOracle)
 count_PGDB_csv = len(dfPGDB)
-percentage_Oracle_pgdb_count = count_Oracle_csv/count_PGDB_csv * 100
+percentage_Oracle_pgdb_count = count_Oracle_csv/count_PGDB_csv *100
+print (' ############# to obtain total unique count ################')
+unique_contract_ids = dfOracle['policy_number'].nunique()
+print(' ############### to obtain total record for unique event date###############', "\n")
+record_oracle_count = dfOracle.groupby('put your column').size().reset_index(name='Total_Records')
 
+##############adding subset for missing columns##################3
+dfPGDB_subset = dfPGDB[['Policy_number']]
+dfOracle_subset = dfOracle[['policy_number']]
+dfPGDB_subset.rename(columns= {'policy_number': 'policy_number_PGDB'}, inplace=True)
+dfOracle_subset.rename(columns= {'policy_number': 'policy_number_PGDB'}, inplace=True)
+print('dfPGDB_subset')
+
+missing_in_PGDB = pd.merge(dfOracle, dfPGDB_subset, left_on = ['policy_nymber'], right_on= ['policy_number_PGDB'])
+missing_in_PGDB1 = missing_in_PGDB[missing_in_PGDB['policy_number_PGDB'].isnull()]
